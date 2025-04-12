@@ -1,4 +1,5 @@
 import express from "express";
+import { upload } from "./src/middleware/multer.middleware.js";
 
 const app = express();
 
@@ -11,5 +12,17 @@ app.get("/", (req, res) => {
         </form>
         `);
 });
+
+app.post("/upload", upload.single('file'), (req, res) => {
+    if(!req.file){
+        return res.status(400).json({error: "File is missing"})
+    }
+
+    return res.status(200).json({
+        message: "File uploaded successfully",
+        filename: req.file.fieldname,
+        path: req.file.path
+    })
+})
 
 export default app;
